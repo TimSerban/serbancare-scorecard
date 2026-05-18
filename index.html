@@ -789,19 +789,31 @@ function disRating() {
 
 function disRatingLabel() {
   var r = disRating();
-  if (r === 0) return "0 — Not Prepared";
-  if (r === 1) return "1 — Basic Awareness";
-  if (r === 2) return "2 — Building";
-  return "3 — Disaster Ready / Advanced";
+  if (r <= 1) return "Level 1 — At High Risk";
+  if (r === 2) return "Level 2 — Building Readiness";
+  return "Level 3 — Continuous Readiness";
+}
+
+function disRatingSubtitle() {
+  var r = disRating();
+  if (r <= 1) return "Critical Vulnerability · Immediate action required";
+  if (r === 2) return "Developing & Novice · Structured development needed";
+  return "Advanced & Comprehensive · Model for the field";
+}
+
+function disLevelNum() {
+  var r = disRating();
+  if (r <= 1) return 1;
+  if (r === 2) return 2;
+  return 3;
 }
 
 /* Engagement modifier: what the disaster rating says to lead with */
 function disEngagementNote() {
-  var r = disRating();
-  if (r === 0) return "Disaster posture is absent. Lead with foundational DSC planning as a first-phase deliverable alongside any maturity work.";
-  if (r === 1) return "Disaster posture is awareness-only. Lead with DSC plan development and command-structure integration as the natural companion to the maturity engagement.";
-  if (r === 2) return "Disaster posture is building. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
-  return "Disaster posture is genuinely advanced. The engagement anchors on the maturity work; disaster may only need a maintenance/succession advisory.";
+  var n = disLevelNum();
+  if (n === 1) return "Disaster posture is Level 1 — At High Risk. No formal plan, undefined staff roles, reactive-only. Lead with foundational DSC planning and command-structure integration as a first-phase deliverable alongside any maturity work.";
+  if (n === 2) return "Disaster posture is Level 2 — Building Readiness. Framework emerging but not consistently practiced. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
+  return "Disaster posture is Level 3 — Continuous Readiness. Fully integrated with active training cycles and community partnerships. The engagement anchors on the maturity work; disaster may only need a maintenance and succession advisory.";
 }
 
 function getPersona() {
@@ -922,9 +934,14 @@ function showResults() {
   document.getElementById('tier-name').textContent = p.matLevel;
   document.getElementById('tier-sub').textContent = p.sub;
   document.getElementById('mat-val').innerHTML = matScore() + ' <small>/ 15</small>';
-  document.getElementById('dis-val').innerHTML = '<small>Level&nbsp;</small>' + p.disRating + '<small>&nbsp;/ 3</small>';
+  document.getElementById('dis-val').innerHTML = '<small>Level&nbsp;</small>' + disLevelNum() + '<small>&nbsp;/ 3</small>';
   document.getElementById('finding-1').textContent = p.prospectFacing;
-  document.getElementById('finding-2').textContent = "Disaster Spiritual Care Readiness: " + p.disLabel + ". " + (p.disRating === 0 ? "Your disaster posture needs foundational attention alongside your maturity work." : p.disRating === 1 ? "Your disaster posture is awareness-only. Foundational planning is the immediate next step." : p.disRating === 2 ? "Your disaster posture is developing. Moving it from planned to exercised is the next concrete step." : "Your disaster posture is advanced. The focus shifts to sustaining, integrating, and succession-proofing it.");
+  var disDesc = disLevelNum() === 1
+    ? "Your disaster posture is " + p.disLabel + " — " + disRatingSubtitle() + ". No formal disaster spiritual care plan is in place, staff roles in a crisis are undefined, and your posture is reactive rather than prepared. This requires immediate foundational attention."
+    : disLevelNum() === 2
+    ? "Your disaster posture is " + p.disLabel + " — " + disRatingSubtitle() + ". An early-stage framework is emerging, with some training and partially defined roles. The next step is moving from policy on paper to consistently practiced, exercised readiness."
+    : "Your disaster posture is " + p.disLabel + " — " + disRatingSubtitle() + ". A fully integrated program is in place with regular training cycles, active community and agency partnerships, and a culture of preparedness embedded at every level. This is the field model.";
+  document.getElementById('finding-2').textContent = disDesc;
   document.getElementById('next-text').textContent = p.suggestedEngagement + ". " + disEngagementNote();
   buildConsultEmail();
   document.getElementById('quiz').classList.add('hidden');
