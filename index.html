@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SerbanCare Readiness Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --ink: #1c2321;
+    --ink-soft: #45524d;
+    --paper: #f7f4ed;
+    --card: #ffffff;
+    --line: #d8d2c4;
+    --accent: #7d4a2e;
+    --accent-soft: #a9744f;
+    --gold: #b08b4f;
+    --sage: #5c6b5d;
+    --sage-soft: #eef0ea;
+    --shadow: 0 18px 50px -28px rgba(28,35,33,0.45);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(circle at 15% 12%, rgba(176,139,79,0.06), transparent 45%),
+                      radial-gradient(circle at 85% 88%, rgba(92,107,93,0.06), transparent 45%);
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .eyebrow {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.1rem, 5vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin-bottom: 18px;
+  }
+  .lede {
+    font-size: 1.18rem;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 30px;
+  }
+  .rule {
+    height: 1px; background: var(--line);
+    margin: 38px 0;
+    border: none;
+  }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 22px;
+    font-size: 0.92rem; color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .meta-row span { display: flex; align-items: center; gap: 7px; }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    padding: 40px 38px;
+  }
+
+  /* progress */
+  .progress-shell {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 30px;
+  }
+  .progress-track {
+    flex: 1; height: 4px; background: var(--sage-soft);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    width: 0%; transition: width .45s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label {
+    font-size: 0.82rem; color: var(--ink-soft);
+    font-style: italic; white-space: nowrap;
+  }
+
+  .dim-tag {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    border-radius: 2px;
+    padding: 4px 11px;
+    margin-bottom: 20px;
+  }
+  .q-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.42rem;
+    line-height: 1.32;
+    margin-bottom: 26px;
+    letter-spacing: -0.01em;
+  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .opt {
+    text-align: left;
+    border: 1px solid var(--line);
+    background: #fcfaf5;
+    color: var(--ink);
+    font-family: 'Newsreader', serif;
+    font-size: 1.02rem;
+    padding: 16px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, transform .12s;
+    line-height: 1.45;
+  }
+  .opt:hover {
+    border-color: var(--accent-soft);
+    background: #fff;
+    transform: translateX(3px);
+  }
+  .opt .opt-label {
+    font-family: 'Fraunces', serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .nav-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 30px;
+  }
+  .back-btn {
+    background: none; border: none;
+    font-family: 'Newsreader', serif; font-style: italic;
+    font-size: 0.95rem; color: var(--ink-soft);
+    cursor: pointer; padding: 6px 2px;
+  }
+  .back-btn:hover { color: var(--accent); }
+  .back-btn[disabled] { opacity: 0; pointer-events: none; }
+
+  /* gate */
+  .gate-icon {
+    font-family: 'Fraunces', serif;
+    font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .gate-h {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.7rem; line-height: 1.25; margin-bottom: 14px;
+  }
+  .gate-p { color: var(--ink-soft); margin-bottom: 8px; }
+  .gate-list {
+    list-style: none; margin: 20px 0 30px;
+    border-top: 1px solid var(--line);
+  }
+  .gate-list li {
+    padding: 13px 0 13px 26px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    font-size: 1rem;
+  }
+  .gate-list li::before {
+    content: "—"; position: absolute; left: 0;
+    color: var(--accent); font-style: normal;
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 0.82rem;
+    font-family: 'Fraunces', serif;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%; padding: 13px 15px;
+    border: 1px solid var(--line); border-radius: 3px;
+    font-family: 'Newsreader', serif; font-size: 1rem;
+    background: #fcfaf5; color: var(--ink);
+  }
+  .field input:focus {
+    outline: none; border-color: var(--accent);
+    background: #fff;
+  }
+  .field-err { border-color: #a33 !important; }
+  .err-msg {
+    color: #a33; font-size: 0.85rem; font-style: italic;
+    margin-top: -6px; margin-bottom: 14px; display: none;
+  }
+  .cta-btn {
+    width: 100%;
+    background: var(--accent); color: #fdfbf6;
+    border: none; border-radius: 3px;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.05rem; letter-spacing: 0.02em;
+    padding: 17px; cursor: pointer;
+    transition: background .18s, transform .12s;
+    margin-top: 8px;
+  }
+  .cta-btn:hover { background: #6a3e26; transform: translateY(-1px); }
+  .privacy {
+    font-size: 0.82rem; color: var(--ink-soft);
+    font-style: italic; text-align: center; margin-top: 14px;
+  }
+
+  /* results */
+  .score-band {
+    text-align: center; padding: 14px 0 26px;
+    border-bottom: 1px solid var(--line); margin-bottom: 30px;
+  }
+  .tier-name {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 2.1rem; letter-spacing: -0.01em;
+    margin: 8px 0 6px;
+  }
+  .tier-sub { color: var(--ink-soft); font-style: italic; }
+  .dual-score { display: flex; gap: 18px; margin-bottom: 30px; }
+  .score-card {
+    flex: 1; border: 1px solid var(--line);
+    border-radius: 3px; padding: 20px 18px; text-align: center;
+    background: #fcfaf5;
+  }
+  .score-card .lbl {
+    font-family: 'Fraunces', serif; font-size: 0.72rem;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 10px;
+  }
+  .score-card .val {
+    font-family: 'Fraunces', serif; font-size: 2rem;
+    font-weight: 600; color: var(--accent);
+  }
+  .score-card .val small {
+    font-size: 0.95rem; color: var(--ink-soft); font-weight: 400;
+  }
+  .findings { margin-bottom: 30px; }
+  .findings h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.15rem; margin-bottom: 14px;
+  }
+  .findings p { color: var(--ink-soft); margin-bottom: 14px; }
+  .next-box {
+    background: var(--sage-soft);
+    border-left: 3px solid var(--sage);
+    padding: 24px 26px; border-radius: 3px;
+    margin-bottom: 26px;
+  }
+  .next-box h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.1rem; margin-bottom: 10px;
+  }
+  .next-box p { font-size: 0.98rem; color: var(--ink-soft); }
+
+  .optin {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 26px 26px 28px;
+    margin-bottom: 26px;
+    background: #fcfaf5;
+  }
+  .optin-eyebrow {
+    font-family: 'Fraunces', serif;
+    font-size: 0.7rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .optin-h {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.18rem; line-height: 1.3; margin-bottom: 10px;
+  }
+  .optin-p {
+    color: var(--ink-soft); font-size: 0.98rem;
+    margin-bottom: 18px;
+  }
+  .optin-thanks {
+    border: 1px solid var(--sage);
+    background: var(--sage-soft);
+    border-radius: 3px;
+    padding: 24px 26px; margin-bottom: 26px;
+  }
+  .optin-thanks .optin-h { margin-bottom: 8px; }
+  .optin-thanks .optin-p { margin-bottom: 0; }
+  .consult-btn {
+    display: block; text-align: center;
+    background: var(--accent); color: #fdfbf6;
+    text-decoration: none; border-radius: 3px;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.05rem; padding: 17px;
+    transition: background .18s;
+  }
+  .consult-btn:hover { background: #6a3e26; }
+  .restart {
+    background: none; border: none;
+    font-family: 'Newsreader', serif; font-style: italic;
+    color: var(--ink-soft); cursor: pointer;
+    font-size: 0.92rem; margin-top: 18px; display: block;
+    width: 100%; text-align: center;
+  }
+  .restart:hover { color: var(--accent); }
+
+  .footer {
+    text-align: center; font-size: 0.85rem;
+    color: var(--ink-soft); font-style: italic;
+    margin-top: 40px; line-height: 1.6;
+  }
+  .hidden { display: none; }
+  .fade-in { animation: fade .5s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 560px) {
+    .wrap { padding: 36px 18px 64px; }
+    .panel { padding: 30px 22px; }
+    .dual-score { flex-direction: column; }
+    .q-text { font-size: 1.22rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro" class="fade-in">
+    <div class="eyebrow">SerbanCare Consulting and Coaching</div>
+    <h1>The Spiritual Care &amp; Disaster Readiness Scorecard</h1>
+    <p class="lede">A structured, ten-question read on where your spiritual care program actually sits, across two dimensions most organizations have never measured.</p>
+    <div class="meta-row">
+      <span>◷ About 4 minutes</span>
+      <span>◆ 10 questions</span>
+      <span>✦ Confidential</span>
+    </div>
+    <hr class="rule">
+    <div class="panel">
+      <p style="margin-bottom:18px;">Most leaders cannot answer three simple questions about their spiritual care program: how mature it is, how defensible it is, and how ready it is for the next crisis or care-model redesign.</p>
+      <p style="margin-bottom:26px;color:var(--ink-soft);">This Scorecard measures both the <strong>Spiritual Care Maturity</strong> curve, aligned to CHA acute care department levels, and your <strong>Disaster Spiritual Care Readiness</strong>, drawn from over three decades of field leadership including response to 9/11, the Boston Marathon bombing, Katrina, Texas Hill Country flash floods, and the Los Angeles urban firestorms of 2025. Your results appear immediately, no email required.</p>
+      <button class="cta-btn" onclick="start()">Begin the Scorecard</button>
+    </div>
+    <p class="footer">Built by Tim Serban, M.A., B.C.C. — Board Certified Clinical Chaplain Executive Leader.<br>SerbanCare.com</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div class="progress-shell">
+      <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+      <div class="progress-label" id="plabel">1 / 10</div>
+    </div>
+    <div class="panel">
+      <span class="dim-tag" id="dimtag">Spiritual Care Maturity</span>
+      <div class="q-text" id="qtext"></div>
+      <div class="options" id="opts"></div>
+      <div class="nav-row">
+        <button class="back-btn" id="backbtn" onclick="goBack()">← Previous</button>
+        <span class="progress-label" id="qcount"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="hidden">
+    <div class="panel fade-in">
+      <div class="score-band">
+        <div class="eyebrow" style="margin-bottom:6px;">Your placement</div>
+        <div class="tier-name" id="tier-name">—</div>
+        <div class="tier-sub" id="tier-sub">—</div>
+      </div>
+      <div class="dual-score">
+        <div class="score-card">
+          <div class="lbl">SC Maturity</div>
+          <div class="val" id="mat-val">—</div>
+        </div>
+        <div class="score-card">
+          <div class="lbl">Disaster Rating</div>
+          <div class="val" id="dis-val">—</div>
+        </div>
+      </div>
+      <div class="findings">
+        <h3>What this means</h3>
+        <p id="finding-1"></p>
+        <p id="finding-2"></p>
+      </div>
+      <div class="next-box">
+        <h3>Your recommended next step</h3>
+        <p id="next-text"></p>
+      </div>
+
+      <div id="optin-block" class="optin">
+        <div class="optin-eyebrow">Optional</div>
+        <h3 class="optin-h">Want the full written report and tailored recommendations?</h3>
+        <p class="optin-p">Your snapshot is above and yours to keep. For the full one-page diagnostic, your placement, the evidence behind it, and the priority areas your answers surfaced, leave your details and it downloads instantly.</p>
+        <div class="field">
+          <label for="g-name">Name</label>
+          <input type="text" id="g-name" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="g-org">Organization</label>
+          <input type="text" id="g-org" placeholder="Health system, diocese, or organization" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="g-email">Work email</label>
+          <input type="email" id="g-email" placeholder="you@organization.org" autocomplete="email">
+        </div>
+        <div class="err-msg" id="gate-err">Please enter your name and a valid work email so we can send your report.</div>
+        <button class="cta-btn" onclick="submitOptin()">Send Me the Full Report</button>
+        <p class="privacy">Used only to send your report and follow up about your readiness. No spam, no list-selling, ever.</p>
+      </div>
+
+      <div id="optin-thanks" class="optin-thanks hidden">
+        <h3 class="optin-h">Your report has downloaded. ✦</h3>
+        <p class="optin-p">Check your downloads for your one-page diagnostic. If it did not open automatically, Tim will follow up with it personally. When you are ready, the consultation below turns this snapshot into a prioritized path.</p>
+      </div>
+
+      <a class="consult-btn" id="consult-link" onclick="return guardConsult(this)">Schedule a Strategy Consultation</a>
+      <button class="restart" onclick="restart()">Retake the Scorecard</button>
+    </div>
+    <p class="footer">This snapshot is a structured self-assessment, not a formal audit.<br>A consultation translates it into a path specific to your organization.</p>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   SerbanCare Readiness Scorecard
+   Two dimensions: Maturity (questions 1-5), Disaster (6-10).
+   Each option carries a 0-3 weight.
+   ============================================================ */
+
+var QUESTIONS = [
+  // ---- DIMENSION 1: SPIRITUAL CARE MATURITY ----
+  { dim: "Spiritual Care Maturity", q: "How does your team describe what a chaplain did after a patient or family visit?",
+    a: [
+      {t:"Generally — \"provided support and presence\"", w:0},
+      {t:"In narrative notes, but without consistent structure", w:1},
+      {t:"Using a defined intervention or assessment framework", w:2},
+      {t:"With documented interventions tied to intended outcomes", w:3}
+    ]},
+  { dim: "Spiritual Care Maturity", q: "Is spiritual or religious struggle screened for early in a patient's stay?",
+    a: [
+      {t:"No structured screening exists", w:0},
+      {t:"Chaplains screen informally when they visit", w:1},
+      {t:"A screening question exists but is inconsistently used", w:2},
+      {t:"Clinical colleagues screen and refer using a defined protocol", w:3}
+    ]},
+  { dim: "Spiritual Care Maturity", q: "If your CFO asked for the evidence base behind your spiritual care investment, what could you show?",
+    a: [
+      {t:"Anecdotes and testimonials", w:0},
+      {t:"Activity counts (visits, consults)", w:1},
+      {t:"Patient or family satisfaction data", w:2},
+      {t:"Outcome data linked to recognized evidence", w:3}
+    ]},
+  { dim: "Spiritual Care Maturity", q: "How is spiritual care positioned within serious-illness and palliative care models?",
+    a: [
+      {t:"Called in reactively when someone asks", w:0},
+      {t:"Available, but not built into the care pathway", w:1},
+      {t:"Included in the pathway for some populations", w:2},
+      {t:"Embedded by design on every serious-illness team", w:3}
+    ]},
+  { dim: "Spiritual Care Maturity", q: "What is your program's relationship to spiritual care research and standards?",
+    a: [
+      {t:"Not on our radar", w:0},
+      {t:"Aware of it, no active engagement", w:1},
+      {t:"Staff are research-literate per current standards", w:2},
+      {t:"We participate in or apply research and outcome work", w:3}
+    ]},
+  // ---- DIMENSION 2: DISASTER SPIRITUAL CARE READINESS ----
+  { dim: "Disaster Spiritual Care Readiness", q: "If a mass-casualty or community disaster struck today, what is your spiritual care response plan?",
+    a: [
+      {t:"We have no defined disaster spiritual care plan", w:0},
+      {t:"It is part of a general emergency plan, untested", w:1},
+      {t:"A specific DSC plan exists but is rarely exercised", w:2},
+      {t:"A specific DSC plan exists and is drilled and current", w:3}
+    ]},
+  { dim: "Disaster Spiritual Care Readiness", q: "Who provides spiritual care to your own staff after a critical incident?",
+    a: [
+      {t:"No defined provision for staff", w:0},
+      {t:"Ad hoc, whoever is available", w:1},
+      {t:"EAP referral, but no embedded spiritual support", w:2},
+      {t:"A trained, ready team for staff support is in place", w:3}
+    ]},
+  { dim: "Disaster Spiritual Care Readiness", q: "Are your chaplains and volunteers trained in disaster and crisis spiritual care specifically?",
+    a: [
+      {t:"No specialized disaster training", w:0},
+      {t:"Some individuals have outside training", w:1},
+      {t:"Periodic training, not standardized", w:2},
+      {t:"Standardized, current disaster spiritual care training", w:3}
+    ]},
+  { dim: "Disaster Spiritual Care Readiness", q: "How integrated is spiritual care into your organization's emergency command structure?",
+    a: [
+      {t:"Not represented in emergency planning", w:0},
+      {t:"Mentioned, but no defined role or seat", w:1},
+      {t:"A defined role exists on paper", w:2},
+      {t:"An active, exercised seat at the command table", w:3}
+    ]},
+  { dim: "Disaster Spiritual Care Readiness", q: "How do you sustain spiritual care capacity during a prolonged crisis, as in a pandemic?",
+    a: [
+      {t:"No surge or sustainability plan", w:0},
+      {t:"We would improvise as we did before", w:1},
+      {t:"A surge concept exists but is untested", w:2},
+      {t:"A tested surge and resilience plan is in place", w:3}
+    ]}
+];
+
+var current = 0;
+var answers = new Array(QUESTIONS.length).fill(null);
+
+function start() {
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('quiz').classList.add('fade-in');
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function render() {
+  var Q = QUESTIONS[current];
+  document.getElementById('dimtag').textContent = Q.dim;
+  document.getElementById('qtext').textContent = Q.q;
+  document.getElementById('plabel').textContent = (current+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('qcount').textContent = (current < 5 ? 'Maturity' : 'Disaster') + ' · ' + (current+1) + ' of ' + QUESTIONS.length;
+  document.getElementById('pfill').style.width = ((current)/(QUESTIONS.length)*100) + '%';
+  var bb = document.getElementById('backbtn');
+  if (current === 0) { bb.setAttribute('disabled','true'); } else { bb.removeAttribute('disabled'); }
+
+  var box = document.getElementById('opts');
+  box.innerHTML = '';
+  Q.a.forEach(function(opt, i){
+    var b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="opt-label">Option ' + String.fromCharCode(65+i) + '</span>' + opt.t;
+    b.onclick = function(){ choose(i); };
+    box.appendChild(b);
+  });
+}
+
+function choose(i) {
+  answers[current] = QUESTIONS[current].a[i].w;
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    document.getElementById('pfill').style.width = '100%';
+    showResults();
+  }
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+
+function submitOptin() {
+  var name = document.getElementById('g-name').value.trim();
+  var org  = document.getElementById('g-org').value.trim();
+  var email = document.getElementById('g-email').value.trim();
+  var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  var err = document.getElementById('gate-err');
+
+  document.getElementById('g-name').classList.remove('field-err');
+  document.getElementById('g-email').classList.remove('field-err');
+
+  if (!name || !valid) {
+    if (!name) document.getElementById('g-name').classList.add('field-err');
+    if (!valid) document.getElementById('g-email').classList.add('field-err');
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  /* ===========================================================
+     LEAD CAPTURE PAYLOAD — ready for Notion CRM wiring.
+     Now carries the INTERNAL persona code and brief so Tim's
+     alert / CRM record is pre-triaged. These internal fields
+     are NEVER rendered into the prospect's PDF.
+     =========================================================== */
+  var p = getPersona();
+  window.SERBANCARE_LEAD = {
+    name: name,
+    organization: org,
+    email: email,
+    maturityScore: matScore(),
+    maturityMax: 15,
+    disasterScore: disScore(),
+    disasterMax: 15,
+    tier: tierName(),
+    personaKey: p.key,
+    internalCode: p.internalCode,
+    internalBrief: p.internalBrief,
+    suggestedEngagement: p.suggestedEngagement,
+    priceBand: p.priceBand,
+    capturedAt: new Date().toISOString(),
+    source: "SerbanCare Readiness Scorecard"
+  };
+  console.log("SerbanCare lead captured:", window.SERBANCARE_LEAD);
+
+  // Refresh Tim's alert email so it now carries the internal triage code
+  buildConsultEmail();
+
+  // Generate and download the one-page diagnostic PDF (prospect-facing only)
+  var pdfOk = generateReportPDF(name, org);
+
+  document.getElementById('optin-block').classList.add('hidden');
+  var thanks = document.getElementById('optin-thanks');
+  thanks.classList.remove('hidden');
+  thanks.classList.add('fade-in');
+  if (!pdfOk) {
+    document.getElementById('optin-thanks').innerHTML =
+      '<h3 class="optin-h">Your details are saved. ✦</h3>' +
+      '<p class="optin-p">Your one-page readiness report is being prepared. If the download did not start automatically, Tim will follow up with it personally.</p>';
+  }
+}
+
+/* ============================================================
+   ONE-PAGE DIAGNOSTIC PDF
+   ------------------------------------------------------------
+   Uses ONLY the persona's prospectFacing register. Names the
+   dilemma and the unmet areas. Deliberately does NOT prescribe
+   the "how" — that is the consulting engagement. Closes by
+   routing the reader to Tim.
+   ============================================================ */
+function generateReportPDF(name, org) {
+  try {
+    if (!window.jspdf || !window.jspdf.jsPDF) { return false; }
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: "pt", format: "letter" });
+    var p = getPersona();
+
+    var PW = 612, M = 56, x = M, y = 64;
+    var ink = [28,35,33], soft = [69,82,77], accent = [125,74,46], line = [216,210,196];
+
+    function wrap(txt, size, font, color, lh, maxw) {
+      doc.setFont("times", font);
+      doc.setFontSize(size);
+      doc.setTextColor(color[0],color[1],color[2]);
+      var lines = doc.splitTextToSize(txt, maxw || (PW - M*2));
+      for (var i=0;i<lines.length;i++){
+        if (y > 720) { doc.addPage(); y = 64; }
+        doc.text(lines[i], x, y); y += lh;
+      }
+    }
+    function rule() {
+      doc.setDrawColor(line[0],line[1],line[2]);
+      doc.setLineWidth(0.6);
+      doc.line(M, y, PW - M, y); y += 22;
+    }
+
+    // Header
+    doc.setFont("times","italic"); doc.setFontSize(10);
+    doc.setTextColor(accent[0],accent[1],accent[2]);
+    doc.text("SerbanCare Consulting and Coaching", x, y); y += 26;
+
+    wrap("Spiritual Care & Disaster Readiness", 22, "bold", ink, 26);
+    wrap("A One-Page Diagnostic Snapshot", 13, "italic", soft, 20);
+    y += 6; rule();
+
+    // Prepared for
+    if (name || org) {
+      wrap("Prepared for: " + (name||"") + (org? "  ·  " + org : ""), 10.5, "italic", soft, 16);
+      y += 6;
+    }
+
+    // Placement
+    wrap("YOUR PLACEMENT", 10, "bold", accent, 16);
+    wrap(p.title, 17, "bold", ink, 22);
+    wrap(p.sub, 12, "italic", soft, 20);
+    y += 4;
+    wrap("SC Maturity: " + p.matLevel + " (" + matScore() + "/15)        Disaster Readiness Rating: " + p.disLabel, 11, "bold", ink, 18);
+    y += 8; rule();
+
+    // The dilemma
+    wrap("WHAT YOUR ANSWERS REVEAL", 10, "bold", accent, 16);
+    wrap(p.prospectFacing, 11.5, "normal", soft, 17);
+    y += 10; rule();
+
+    // Unmet areas
+    wrap("PRIORITY AREAS YOUR SNAPSHOT SURFACED", 10, "bold", accent, 16);
+    y += 2;
+    for (var i=0;i<p.unmetAreas.length;i++){
+      if (y > 710) { doc.addPage(); y = 64; }
+      doc.setFont("times","bold"); doc.setFontSize(11.5);
+      doc.setTextColor(accent[0],accent[1],accent[2]);
+      doc.text("—", x, y);
+      doc.setFont("times","normal");
+      doc.setTextColor(soft[0],soft[1],soft[2]);
+      var ls = doc.splitTextToSize(p.unmetAreas[i], PW - M*2 - 20);
+      for (var j=0;j<ls.length;j++){
+        if (y > 720) { doc.addPage(); y = 64; }
+        doc.text(ls[j], x + 18, y); y += 16;
+      }
+      y += 4;
+    }
+    y += 6; rule();
+
+    // The deliberate stop — diagnose, don't prescribe
+    wrap("WHY THIS IS THE STARTING POINT, NOT THE ANSWER", 10, "bold", accent, 16);
+    wrap("This snapshot is a screen. In spiritual care, a screen identifies who needs care; it does not deliver the care. Naming these gaps is the diagnosis. Closing them is structured, expert work, sequencing the right interventions, protecting the human heart of care, and building what survives a budget cycle and a crisis. That work is what SerbanCare does, and it is specific to your organization in ways a document cannot be.", 11.5, "normal", soft, 17);
+    y += 12; rule();
+
+    // Close to Tim
+    wrap("YOUR NEXT STEP", 10, "bold", accent, 16);
+    wrap("A focused consultation with Tim Serban translates this snapshot into a prioritized, costed path for your organization. He holds over three decades leading healthcare spiritual care and equally three decades building the American Red Cross Disaster Spiritual Care program, including strategic response plans born out of local, global and international impacted disasters from aviation, human caused, and natural disasters from 9/11 to the Boston Marathon bombing to Katrina and Texas Hill Country flash floods and Los Angeles urban firestorms of 2025.", 11.5, "normal", soft, 17);
+    y += 4;
+    wrap("Tim.Serban@SerbanCare.com   ·   SerbanCare.com", 11, "bold", accent, 18);
+
+    // Footer
+    if (y < 740) y = 748;
+    doc.setFont("times","italic"); doc.setFontSize(8.5);
+    doc.setTextColor(soft[0],soft[1],soft[2]);
+    doc.text("This is a structured self-assessment snapshot, not a formal audit. © SerbanCare Consulting and Coaching.", x, 762);
+
+    var safeName = (org || name || "SerbanCare").replace(/[^a-z0-9]/gi,"_").slice(0,40);
+    doc.save("SerbanCare_Readiness_Snapshot_" + safeName + ".pdf");
+    return true;
+  } catch (e) {
+    console.error("PDF generation failed:", e);
+    return false;
+  }
+}
+
+function matScore(){ var s=0; for(var i=0;i<5;i++){ s+=answers[i]||0; } return s; }
+function disScore(){ var s=0; for(var i=5;i<10;i++){ s+=answers[i]||0; } return s; }
+
+/* ============================================================
+   SCORING ARCHITECTURE
+   ------------------------------------------------------------
+   PRIMARY AXIS: Spiritual Care Maturity (0-15, questions 1-5)
+     Maps to 4 CHA-aligned acute care department levels:
+       Critically Low      : maturity 0-6
+       Building            : maturity 7-10
+       Established         : maturity 11-13
+       Comprehensively Staffed : maturity 14-15
+
+   SECONDARY AXIS: Disaster Readiness (0-15, questions 6-10)
+     Recalibrated to 0-3 rating by averaging all 5 answers:
+       0 = Not Prepared    (avg 0.0-0.5)
+       1 = Basic Awareness (avg 0.6-1.5)
+       2 = Building        (avg 1.6-2.5)
+       3 = Disaster Ready / Advanced (avg 2.6-3.0)
+     The 0-3 rating drives ENGAGEMENT TYPE.
+     Maturity drives PERSONA IDENTITY and PRICE BAND.
+
+   FUNDING FLAG: maturity <= 6 (universal, spiritual care axis
+     only, never suppressed) = FUNDING RED FLAG, CUTS IMMINENT.
+
+   TWO REGISTERS per persona:
+     prospectFacing : diplomatic PDF (never shows codes/pricing)
+     internalCode + internalBrief : Tim's blunt triage alert only
+   ============================================================ */
+
+function matLevel() {
+  var m = matScore();
+  if (m <= 6)  return "Critically Low";
+  if (m <= 10) return "Building";
+  if (m <= 13) return "Established";
+  return "Comprehensively Staffed";
+}
+
+function tierName() {
+  // kept for backward compatibility with display logic
+  return matLevel();
+}
+
+function disRating() {
+  /* Average the 5 disaster answers (each 0-3) → 0-3 rating */
+  var total = 0;
+  for (var i = 5; i < 10; i++) { total += answers[i] || 0; }
+  var avg = total / 5;
+  if (avg <= 0.5) return 0;
+  if (avg <= 1.5) return 1;
+  if (avg <= 2.5) return 2;
+  return 3;
+}
+
+function disRatingLabel() {
+  var r = disRating();
+  if (r === 0) return "0 — Not Prepared";
+  if (r === 1) return "1 — Basic Awareness";
+  if (r === 2) return "2 — Building";
+  return "3 — Disaster Ready / Advanced";
+}
+
+/* Engagement modifier: what the disaster rating says to lead with */
+function disEngagementNote() {
+  var r = disRating();
+  if (r === 0) return "Disaster posture is absent. Lead with foundational DSC planning as a first-phase deliverable alongside any maturity work.";
+  if (r === 1) return "Disaster posture is awareness-only. Lead with DSC plan development and command-structure integration as the natural companion to the maturity engagement.";
+  if (r === 2) return "Disaster posture is building. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
+  return "Disaster posture is genuinely advanced. The engagement anchors on the maturity work; disaster may only need a maintenance/succession advisory.";
+}
+
+function getPersona() {
+  var m = matScore();
+  var ml = matLevel();
+  var dr = disRating();
+  var drl = disRatingLabel();
+
+  /* Universal funding-risk rule: maturity <= 6 = cuts imminent.
+     Tracks the spiritual care axis only. Never suppressed.
+     Internal only — never reaches the PDF. */
+  var FUNDING_FLAG = (m <= 6) ? " — FUNDING RED FLAG, CUTS IMMINENT" : "";
+
+  /* ---- CRITICALLY LOW  (maturity 0-6) ---- */
+  if (ml === "Critically Low") {
+    return {
+      key: "CRITICALLY_LOW",
+      matLevel: ml,
+      disRating: dr,
+      disLabel: drl,
+      internalCode: "CRITICALLY LOW — SC MATURITY DEFICIT" + FUNDING_FLAG + " | DSC: " + drl,
+      internalBrief: "Bottom-tier spiritual care maturity (score " + m + "/15). Funding exposure is live — program cannot describe or defend its value. Lead with foundational structure build and funding-defensibility urgency. DSC at level " + dr + ": " + disEngagementNote(),
+      title: "A Department at a Foundational Crossroads",
+      sub: "Valued presence, limited structure to show for it",
+      prospectFacing: "Your responses describe a department that delivers compassionate, valued presence. That is the irreducible heart of this work. The pattern also shows that the structure beneath that presence, the ability to describe interventions, screen for spiritual risk, demonstrate outcomes, and be seen as an essential part of the care team, is still largely unbuilt. This is the most common starting point nationally, and it is also the position from which departments are most often cut before they are ever built, because what cannot be described is hard to defend when leadership asks the hard questions.",
+      unmetAreas: [
+        "A structured, consistent way to document what chaplains do and why",
+        "Spiritual and religious struggle screening integrated into the admission process",
+        "A defensible evidence base for the department's clinical value",
+        "Spiritual care positioned in serious-illness and palliative care pathways",
+        "Research-literate practice aligned with current professional standards",
+        "Defined provision for staff spiritual care following critical incidents",
+        "A baseline disaster spiritual care plan with a named chaplaincy role"
+      ],
+      suggestedEngagement: "Foundational Readiness Build — fast-start, phased",
+      priceBand: "$6,500–$12,000 phased; retained option $3,500–$5,500/mo"
+    };
+  }
+
+  /* ---- BUILDING  (maturity 7-10) ---- */
+  if (ml === "Building") {
+    return {
+      key: "BUILDING",
+      matLevel: ml,
+      disRating: dr,
+      disLabel: drl,
+      internalCode: "BUILDING — STRUCTURE FORMING, OUTCOMES GAP" + FUNDING_FLAG + " | DSC: " + drl,
+      internalBrief: "Mid-tier maturity (score " + m + "/15). Structure forming but outcomes and care-model integration are partial. Solid pipeline lead." + (m <= 6 ? " NOTE: score is at the funding-flag boundary — defensibility is still exposed. Lead with urgency." : " Sell the outcomes/black-box build and DSC hardening as sequenced work.") + " DSC at level " + dr + ": " + disEngagementNote(),
+      title: "A Department Building Toward Proven",
+      sub: "Past presence-only, not yet able to fully demonstrate its value",
+      prospectFacing: "Your responses show a department that has moved past presence-only. Some structure, screening, and documentation exist, which already places you ahead of most. The pattern also surfaces where the next frontier sits: connecting what chaplains do to measurable benefit, the shift the research calls opening the black box, and embedding spiritual care into care models by design rather than by request. That distance, between showing up and being built in, is where departments become indispensable or remain optional.",
+      unmetAreas: [
+        "Outcome measurement linking chaplain interventions to demonstrated patient benefit",
+        "Consistent, protocol-driven spiritual and religious struggle screening",
+        "Spiritual care embedded in serious-illness pathways for all relevant populations",
+        "Documentation tied to clinical outcomes, not just visit logs",
+        "Stronger integration into interdisciplinary care team structure",
+        "Research engagement aligned with current APC and ACPE standards"
+      ],
+      suggestedEngagement: "Outcomes and Care Integration build — sequenced over 2 phases",
+      priceBand: "$9,000–$18,000 phased; advisory $4,000–$6,500/mo"
+    };
+  }
+
+  /* ---- ESTABLISHED  (maturity 11-13) ---- */
+  if (ml === "Established") {
+    return {
+      key: "ESTABLISHED",
+      matLevel: ml,
+      disRating: dr,
+      disLabel: drl,
+      internalCode: "ESTABLISHED — NEXT LEVEL BLACK BOX, ADVANCED INTEGRATION | DSC: " + drl,
+      internalBrief: "Strong maturity (score " + m + "/15). Top-third program nationally. Not a rescue — a refinement. Sell precision: deeper outcome measurement, serious-illness pathway tightening, advanced integration. Higher band, retained advisory fit. DSC at level " + dr + ": " + disEngagementNote(),
+      title: "An Established Department with Specific Next-Level Gaps",
+      sub: "Operating on current evidence, with precision work ahead",
+      prospectFacing: "Your responses describe a department operating on current evidence: structured interventions, screening, outcome awareness, and meaningful care-team integration. That places you in the minority of departments nationally. The pattern shows the remaining work is precision rather than foundation, deepening how outcomes are measured, tightening integration into every serious-illness team by design, and turning a capable department into one whose contribution is so clearly defined that it survives any leadership transition or budget cycle. The gap between established and irreplaceable is specific and closable.",
+      unmetAreas: [
+        "Deeper, mechanism-level outcome measurement — opening the full black box",
+        "Spiritual care integrated into every serious-illness and palliative care team by design",
+        "Advanced documentation tied to care-model metrics leadership tracks",
+        "Succession planning to ensure the department's strength survives transition",
+        "Research participation or applied outcome work that elevates departmental standing"
+      ],
+      suggestedEngagement: "Advanced Integration advisory + outcomes deepening",
+      priceBand: "Retained advisory $5,500–$7,500/mo; project $12,000–$25,000"
+    };
+  }
+
+  /* ---- COMPREHENSIVELY STAFFED  (maturity 14-15) ---- */
+  return {
+    key: "COMPREHENSIVELY_STAFFED",
+    matLevel: ml,
+    disRating: dr,
+    disLabel: drl,
+    internalCode: "COMPREHENSIVELY STAFFED — FIELD-LEADING, POSITIONING PLAY | DSC: " + drl,
+    internalBrief: "Field-leading maturity (score " + m + "/15). Not a deficit sell — an opportunity sell. Lead with thought leadership, succession durability, ethical AI integration. Highest value, lowest volume. Peer-level tone only — do not pitch this as a rescue. DSC at level " + dr + ": " + disEngagementNote(),
+    title: "A Comprehensively Staffed and Field-Leading Department",
+    sub: "Where the evidence says spiritual care should be",
+    prospectFacing: "Your responses describe a department that reflects where the evidence says spiritual care should be: interventions described, outcomes tracked, staff qualified and sufficient for the patient population, and spiritual care built into care models by design. Very few departments are here. The pattern suggests the strategic question is no longer catching up. It is leadership, ensuring the department's strength survives the next leadership transition, positioning it as a national model, and thoughtfully integrating emerging tools, including AI, in ways that protect the human heart of care rather than erode it.",
+    unmetAreas: [
+      "Succession durability — ensuring the department's strength survives leadership transition",
+      "External thought-leadership positioning for the department and its leaders",
+      "Ethical AI integration into spiritual care, governed and human-centered",
+      "Contribution to the field's research and outcome evidence base",
+      "Cross-system influence and standard-setting within your health system or diocese"
+    ],
+    suggestedEngagement: "Peer-level strategic advisory (positioning, succession, ethical AI)",
+    priceBand: "Strategic retainer $6,500–$9,000/mo; advisory $300–$450/hr"
+  };
+}
+
+/* Legacy TIER_DATA replaced by getPersona() above.
+   showResults() now reads directly from the persona object. */
+var TIER_DATA = {};
+
+function showResults() {
+  var p = getPersona();
+  document.getElementById('tier-name').textContent = p.matLevel;
+  document.getElementById('tier-sub').textContent = p.sub;
+  document.getElementById('mat-val').innerHTML = matScore() + ' <small>/ 15</small>';
+  document.getElementById('dis-val').innerHTML = '<small>Level&nbsp;</small>' + p.disRating + '<small>&nbsp;/ 3</small>';
+  document.getElementById('finding-1').textContent = p.prospectFacing;
+  document.getElementById('finding-2').textContent = "Disaster Spiritual Care Readiness: " + p.disLabel + ". " + (p.disRating === 0 ? "Your disaster posture needs foundational attention alongside your maturity work." : p.disRating === 1 ? "Your disaster posture is awareness-only. Foundational planning is the immediate next step." : p.disRating === 2 ? "Your disaster posture is developing. Moving it from planned to exercised is the next concrete step." : "Your disaster posture is advanced. The focus shifts to sustaining, integrating, and succession-proofing it.");
+  document.getElementById('next-text').textContent = p.suggestedEngagement + ". " + disEngagementNote();
+  buildConsultEmail();
+  document.getElementById('results').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildConsultEmail() {
+  var tier = tierName();
+  var p = getPersona();
+  var capturedName  = document.getElementById('g-name').value.trim();
+  var capturedOrg   = document.getElementById('g-org').value.trim();
+  var capturedEmail = document.getElementById('g-email').value.trim();
+
+  var subject = "ALERT — SerbanCare SCORECARD — [" + p.internalCode + "] — "
+    + (capturedName ? capturedName : "New prospect")
+    + (capturedOrg ? " (" + capturedOrg + ")" : "");
+
+  var areas = "";
+  for (var i=0;i<p.unmetAreas.length;i++){ areas += "  " + (i+1) + ". " + p.unmetAreas[i] + "\n"; }
+
+  var body =
+    "ALERT: This is from the SerbanCare Spiritual Care SCORECARD.\n" +
+    "A prospect is requesting a strategy consultation.\n\n" +
+    "PROSPECT DETAILS\n" +
+    "  Name:         " + (capturedName  ? capturedName  : "(not provided)") + "\n" +
+    "  Organization: " + (capturedOrg   ? capturedOrg   : "(not provided)") + "\n" +
+    "  Email:        " + (capturedEmail ? capturedEmail : "(not provided)") + "\n\n" +
+    "SCORECARD RESULTS\n" +
+    "  Tier:                    " + tier + "\n" +
+    "  SC Maturity Level:       " + matLevel() + " (" + matScore() + "/15)\n" +
+    "  Disaster Rating:         " + disRatingLabel() + "\n\n" +
+    "================ INTERNAL TRIAGE (NOT SHOWN TO PROSPECT) ================\n" +
+    "  PERSONA CODE:  " + p.internalCode + "\n" +
+    "  READ:          " + p.internalBrief + "\n\n" +
+    "  PRE-LOADED PRIORITY AREAS:\n" + areas + "\n" +
+    "  SUGGESTED ENGAGEMENT:  " + p.suggestedEngagement + "\n" +
+    "  PRICE BAND:            " + p.priceBand + "\n" +
+    "========================================================================\n\n" +
+    "Source: SerbanCare Readiness Scorecard\n" +
+    "Captured: " + new Date().toLocaleString() + "\n";
+
+  var CONSULT_DESTINATION = "mailto:Tim.Serban@SerbanCare.com"
+    + "?subject=" + encodeURIComponent(subject)
+    + "&body=" + encodeURIComponent(body);
+
+  document.getElementById('consult-link').setAttribute('href', CONSULT_DESTINATION);
+}
+
+function guardConsult(el) {
+  /* Rebuild the email fresh so it always reflects the latest
+     name/org/email the prospect entered, then navigate.
+     Safety net prevents any scroll-to-top glitch. */
+  buildConsultEmail();
+  var dest = el.getAttribute('href');
+  if (!dest || dest === '#' || dest.indexOf('mailto:') !== 0 && dest.indexOf('http') !== 0) {
+    return false;
+  }
+  return true;
+}
+
+function restart() {
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('intro').classList.remove('hidden');
+  document.getElementById('optin-block').classList.remove('hidden');
+  document.getElementById('optin-thanks').classList.add('hidden');
+  document.getElementById('gate-err').style.display = 'none';
+  document.getElementById('g-name').value = '';
+  document.getElementById('g-org').value = '';
+  document.getElementById('g-email').value = '';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
