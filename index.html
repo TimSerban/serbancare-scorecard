@@ -927,6 +927,7 @@ function showResults() {
   document.getElementById('finding-2').textContent = "Disaster Spiritual Care Readiness: " + p.disLabel + ". " + (p.disRating === 0 ? "Your disaster posture needs foundational attention alongside your maturity work." : p.disRating === 1 ? "Your disaster posture is awareness-only. Foundational planning is the immediate next step." : p.disRating === 2 ? "Your disaster posture is developing. Moving it from planned to exercised is the next concrete step." : "Your disaster posture is advanced. The focus shifts to sustaining, integrating, and succession-proofing it.");
   document.getElementById('next-text').textContent = p.suggestedEngagement + ". " + disEngagementNote();
   buildConsultEmail();
+  document.getElementById('quiz').classList.add('hidden');
   document.getElementById('results').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
