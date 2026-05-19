@@ -765,10 +765,10 @@ function disScore(){ var s=0; for(var i=5;i<10;i++){ s+=answers[i]||0; } return 
 
 function matLevel() {
   var m = matScore();
-  if (m <= 6)  return "Critically Low";
+  if (m <= 6)  return "Emerging Opportunity";
   if (m <= 10) return "Building";
-  if (m <= 13) return "Established";
-  return "Comprehensively Staffed";
+  if (m <= 13) return "Integrated";
+  return "Optimally Resourced";
 }
 
 function tierName() {
@@ -828,13 +828,13 @@ function getPersona() {
   var FUNDING_FLAG = (m <= 6) ? " — FUNDING RED FLAG, CUTS IMMINENT" : "";
 
   /* ---- CRITICALLY LOW  (maturity 0-6) ---- */
-  if (ml === "Critically Low") {
+  if (ml === "Emerging Opportunity") {
     return {
-      key: "CRITICALLY_LOW",
+      key: "EMERGING_OPPORTUNITY",
       matLevel: ml,
       disRating: dr,
       disLabel: drl,
-      internalCode: "CRITICALLY LOW — SC MATURITY DEFICIT" + FUNDING_FLAG + " | DSC: " + drl,
+      internalCode: "EMERGING OPPORTUNITY — SC MATURITY DEFICIT" + FUNDING_FLAG + " | DSC: " + drl,
       internalBrief: "Bottom-tier spiritual care maturity (score " + m + "/15). Funding exposure is live — program cannot describe or defend its value. Lead with foundational structure build and funding-defensibility urgency. DSC at level " + dr + ": " + disEngagementNote(),
       title: "A Department at a Foundational Crossroads",
       sub: "Valued presence, limited structure to show for it",
@@ -879,15 +879,15 @@ function getPersona() {
   }
 
   /* ---- ESTABLISHED  (maturity 11-13) ---- */
-  if (ml === "Established") {
+  if (ml === "Integrated") {
     return {
-      key: "ESTABLISHED",
+      key: "INTEGRATED",
       matLevel: ml,
       disRating: dr,
       disLabel: drl,
-      internalCode: "ESTABLISHED — NEXT LEVEL BLACK BOX, ADVANCED INTEGRATION | DSC: " + drl,
+      internalCode: "INTEGRATED — NEXT LEVEL BLACK BOX, ADVANCED INTEGRATION | DSC: " + drl,
       internalBrief: "Strong maturity (score " + m + "/15). Top-third program nationally. Not a rescue — a refinement. Sell precision: deeper outcome measurement, serious-illness pathway tightening, advanced integration. Higher band, retained advisory fit. DSC at level " + dr + ": " + disEngagementNote(),
-      title: "An Established Department with Specific Next-Level Gaps",
+      title: "An Integrated Department with Specific Next-Level Gaps",
       sub: "Operating on current evidence, with precision work ahead",
       prospectFacing: "Your responses describe a department operating on current evidence: structured interventions, screening, outcome awareness, and meaningful care-team integration. That places you in the minority of departments nationally. The pattern shows the remaining work is precision rather than foundation, deepening how outcomes are measured, tightening integration into every serious-illness team by design, and turning a capable department into one whose contribution is so clearly defined that it survives any leadership transition or budget cycle. The gap between established and irreplaceable is specific and closable.",
       unmetAreas: [
@@ -902,15 +902,15 @@ function getPersona() {
     };
   }
 
-  /* ---- COMPREHENSIVELY STAFFED  (maturity 14-15) ---- */
+  /* ---- OPTIMALLY RESOURCED  (maturity 14-15) ---- */
   return {
-    key: "COMPREHENSIVELY_STAFFED",
+    key: "OPTIMALLY_RESOURCED",
     matLevel: ml,
     disRating: dr,
     disLabel: drl,
-    internalCode: "COMPREHENSIVELY STAFFED — FIELD-LEADING, POSITIONING PLAY | DSC: " + drl,
+    internalCode: "OPTIMALLY RESOURCED — FIELD-LEADING, POSITIONING PLAY | DSC: " + drl,
     internalBrief: "Field-leading maturity (score " + m + "/15). Not a deficit sell — an opportunity sell. Lead with thought leadership, succession durability, ethical AI integration. Highest value, lowest volume. Peer-level tone only — do not pitch this as a rescue. DSC at level " + dr + ": " + disEngagementNote(),
-    title: "A Comprehensively Staffed and Field-Leading Department",
+    title: "An Optimally Resourced and Field-Leading Department",
     sub: "Where the evidence says spiritual care should be",
     prospectFacing: "Your responses describe a department that reflects where the evidence says spiritual care should be: interventions described, outcomes tracked, staff qualified and sufficient for the patient population, and spiritual care built into care models by design. Very few departments are here. The pattern suggests the strategic question is no longer catching up. It is leadership, ensuring the department's strength survives the next leadership transition, positioning it as a national model, and thoughtfully integrating emerging tools, including AI, in ways that protect the human heart of care rather than erode it.",
     unmetAreas: [
