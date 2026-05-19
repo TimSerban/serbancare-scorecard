@@ -956,33 +956,25 @@ function buildConsultEmail() {
   var capturedOrg   = document.getElementById('g-org').value.trim();
   var capturedEmail = document.getElementById('g-email').value.trim();
 
-  var subject = "ALERT — SerbanCare SCORECARD — [" + p.internalCode + "] — "
-    + (capturedName ? capturedName : "New prospect")
+  var subject = "Strategy Consultation Request — SerbanCare Scorecard"
+    + (capturedName ? " — " + capturedName : "")
     + (capturedOrg ? " (" + capturedOrg + ")" : "");
 
   var areas = "";
   for (var i=0;i<p.unmetAreas.length;i++){ areas += "  " + (i+1) + ". " + p.unmetAreas[i] + "\n"; }
 
   var body =
-    "ALERT: This is from the SerbanCare Spiritual Care SCORECARD.\n" +
-    "A prospect is requesting a strategy consultation.\n\n" +
-    "PROSPECT DETAILS\n" +
+    "Hi Tim,\n\n" +
+    "I just completed the SerbanCare Readiness Scorecard and would like to schedule a strategy consultation.\n\n" +
+    "MY DETAILS\n" +
     "  Name:         " + (capturedName  ? capturedName  : "(not provided)") + "\n" +
     "  Organization: " + (capturedOrg   ? capturedOrg   : "(not provided)") + "\n" +
     "  Email:        " + (capturedEmail ? capturedEmail : "(not provided)") + "\n\n" +
-    "SCORECARD RESULTS\n" +
-    "  Tier:                    " + tier + "\n" +
-    "  SC Maturity Level:       " + matLevel() + " (" + matScore() + "/15)\n" +
-    "  Disaster Rating:         " + disRatingLabel() + "\n\n" +
-    "================ INTERNAL TRIAGE (NOT SHOWN TO PROSPECT) ================\n" +
-    "  PERSONA CODE:  " + p.internalCode + "\n" +
-    "  READ:          " + p.internalBrief + "\n\n" +
-    "  PRE-LOADED PRIORITY AREAS:\n" + areas + "\n" +
-    "  SUGGESTED ENGAGEMENT:  " + p.suggestedEngagement + "\n" +
-    "  PRICE BAND:            " + p.priceBand + "\n" +
-    "========================================================================\n\n" +
-    "Source: SerbanCare Readiness Scorecard\n" +
-    "Captured: " + new Date().toLocaleString() + "\n";
+    "MY SCORECARD RESULTS\n" +
+    "  Spiritual Care Maturity:  " + matLevel() + " (" + matScore() + "/15)\n" +
+    "  Disaster Readiness:       " + disRatingLabel() + "\n\n" +
+    "I look forward to hearing from you.\n\n" +
+    (capturedName ? capturedName : "") + "\n";
 
   var CONSULT_DESTINATION = "mailto:Tim.Serban@SerbanCare.com"
     + "?subject=" + encodeURIComponent(subject)
