@@ -789,16 +789,16 @@ function disRating() {
 
 function disRatingLabel() {
   var r = disRating();
-  if (r <= 1) return "Level 1 — At High Risk";
-  if (r === 2) return "Level 2 — Building Readiness";
-  return "Level 3 — Continuous Readiness";
+  if (r <= 1) return "Level 1 — High Vulnerability";
+  if (r === 2) return "Level 2 — Emerging Readiness";
+  return "Level 3 — Optimal Readiness";
 }
 
 function disRatingSubtitle() {
   var r = disRating();
-  if (r <= 1) return "Critical Vulnerability · Immediate action required";
-  if (r === 2) return "Developing & Novice · Structured development needed";
-  return "Advanced & Comprehensive · Model for the field";
+  if (r <= 1) return "High Vulnerability · Immediate action required";
+  if (r === 2) return "Emerging Readiness · Structured development needed";
+  return "Optimal Readiness · Model for the field";
 }
 
 function disLevelNum() {
@@ -811,9 +811,9 @@ function disLevelNum() {
 /* Engagement modifier: what the disaster rating says to lead with */
 function disEngagementNote() {
   var n = disLevelNum();
-  if (n === 1) return "Disaster posture is Level 1 — At High Risk. No formal plan, undefined staff roles, reactive-only. Lead with foundational DSC planning and command-structure integration as a first-phase deliverable alongside any maturity work.";
-  if (n === 2) return "Disaster posture is Level 2 — Building Readiness. Framework emerging but not consistently practiced. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
-  return "Disaster posture is Level 3 — Continuous Readiness. Fully integrated with active training cycles and community partnerships. The engagement anchors on the maturity work; disaster may only need a maintenance and succession advisory.";
+  if (n === 1) return "Disaster posture is Level 1 — High Vulnerability. No formal plan, undefined staff roles, reactive-only. Lead with foundational DSC planning and command-structure integration as a first-phase deliverable alongside any maturity work.";
+  if (n === 2) return "Disaster posture is Level 2 — Emerging Readiness. Framework emerging but not consistently practiced. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
+  return "Disaster posture is Level 3 — Optimal Readiness. Fully integrated with active training cycles and community partnerships. The engagement anchors on the maturity work; disaster may only need a maintenance and succession advisory.";
 }
 
 function getPersona() {
