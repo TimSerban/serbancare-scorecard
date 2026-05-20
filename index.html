@@ -136,6 +136,8 @@
     background: #fff;
     transform: translateX(3px);
   }
+  .opt:focus { outline: none; }
+  .opt:active { transform: none; }
   .opt .opt-label {
     font-family: 'Fraunces', serif;
     font-size: 0.74rem;
@@ -544,7 +546,7 @@ function render() {
     var b = document.createElement('button');
     b.className = 'opt';
     b.innerHTML = '<span class="opt-label">Option ' + String.fromCharCode(65+i) + '</span>' + opt.t;
-    b.onclick = function(){ choose(i); };
+    b.onclick = function(){ this.blur(); choose(i); };
     box.appendChild(b);
   });
 }
