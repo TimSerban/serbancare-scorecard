@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("2_4vTb5EKRd6yxxIR");</script>
 <style>
   :root {
     --ink: #1c2321;
@@ -614,8 +616,23 @@ function submitOptin() {
   // Refresh Tim's alert email so it now carries the internal triage code
   buildConsultEmail();
 
-  // Generate and download the one-page diagnostic PDF (prospect-facing only)
+  // Generate and download the Preliminary Readiness Report PDF
   var pdfOk = generateReportPDF(name, org);
+
+  // Notify Tim automatically
+  emailjs.send("service_p614e06", "template_i31i8ff", {
+    subject: "New Preliminary Readiness Report — " + name + (org ? " (" + org + ")" : ""),
+    body:
+      "A client has just downloaded their Preliminary Readiness Report.\n\n" +
+      "CLIENT DETAILS\n" +
+      "  Name:         " + name + "\n" +
+      "  Organization: " + (org  ? org  : "(not provided)") + "\n" +
+      "  Email:        " + email + "\n\n" +
+      "SCORECARD RESULTS\n" +
+      "  Spiritual Care Maturity:  " + matLevel() + " (" + matScore() + "/15)\n" +
+      "  Disaster Readiness:       " + disRatingLabel() + "\n\n" +
+      "Captured: " + new Date().toLocaleString()
+  });
 
   document.getElementById('optin-block').classList.add('hidden');
   var thanks = document.getElementById('optin-thanks');
