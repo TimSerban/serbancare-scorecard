@@ -647,8 +647,9 @@ function submitOptin() {
 
   // Notify Tim automatically
   emailjs.send("service_p614e06", "template_i31i8ff", {
-    to_email: "Tim.Serban@SerbanCare.com",
-    subject: "New Preliminary Readiness Report — " + name + (org ? " (" + org + ")" : ""),
+    title: "New Preliminary Readiness Report — " + name + (org ? " (" + org + ")" : ""),
+    name: name + (org ? " (" + org + ")" : ""),
+    email: email,
     body:
       "A client has just downloaded their Preliminary Readiness Report.\n\n" +
       "CLIENT DETAILS\n" +
