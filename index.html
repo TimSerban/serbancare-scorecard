@@ -326,6 +326,20 @@
     color: var(--ink-soft); font-style: italic;
     margin-top: 40px; line-height: 1.6;
   }
+  .badge-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: #fdfbf6;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: background .18s, transform .12s;
+  }
+  .badge-btn:hover { background: #8f6e38; transform: translateY(-1px); }
   .hidden { display: none; }
   .fade-in { animation: fade .5s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -407,7 +421,8 @@
 
       <div class="next-box" style="background:#f7f4ed; border-left-color: var(--gold); margin-bottom:26px;">
         <h3 style="color:var(--gold);">✦ Leadership Digital Readiness: Exceptional</h3>
-        <p style="font-size:0.98rem; color:var(--ink-soft); margin-top:8px;">By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of <strong>Exceptional</strong>. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!</p>
+        <p style="font-size:0.98rem; color:var(--ink-soft); margin-top:8px; margin-bottom:18px;">By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of <strong>Exceptional</strong>. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!</p>
+        <button class="badge-btn" onclick="generateBadge()">⬇ Download Your Pioneer Badge</button>
       </div>
 
       <div id="optin-block" class="optin">
@@ -1022,6 +1037,128 @@ function guardConsult(el) {
     return false;
   }
   return true;
+}
+
+function generateBadge() {
+  var size = 600;
+  var canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  var ctx = canvas.getContext('2d');
+  var cx = size / 2, cy = size / 2, R = 282;
+
+  // Main circle
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
+  ctx.fillStyle = '#1a1614'; ctx.fill();
+
+  // Radial gold glow
+  var grd = ctx.createRadialGradient(cx, cy-60, 10, cx, cy, R);
+  grd.addColorStop(0, 'rgba(176,139,79,0.18)');
+  grd.addColorStop(1, 'rgba(176,139,79,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
+  ctx.fillStyle = grd; ctx.fill();
+
+  // Outer gold ring
+  ctx.beginPath(); ctx.arc(cx, cy, R - 5, 0, Math.PI*2);
+  ctx.strokeStyle = '#b08b4f'; ctx.lineWidth = 10; ctx.stroke();
+
+  // Inner thin ring
+  ctx.beginPath(); ctx.arc(cx, cy, R - 24, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(176,139,79,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // Decorative dots on inner ring
+  for (var i = 0; i < 72; i++) {
+    var a = (i / 72) * Math.PI * 2;
+    var dx = cx + (R-24) * Math.cos(a), dy = cy + (R-24) * Math.sin(a);
+    ctx.beginPath(); ctx.arc(dx, dy, i % 6 === 0 ? 2.5 : 1, 0, Math.PI*2);
+    ctx.fillStyle = i % 6 === 0 ? '#b08b4f' : 'rgba(176,139,79,0.25)'; ctx.fill();
+  }
+
+  // Curved text helper — top arc
+  function arcText(text, radius, centerAngle, color, fontStr, spacing) {
+    ctx.save(); ctx.font = fontStr; ctx.fillStyle = color;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    var total = spacing * (text.length - 1);
+    var angle = centerAngle - total / 2;
+    for (var j = 0; j < text.length; j++) {
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle);
+      ctx.fillText(text[j], 0, -radius); ctx.restore();
+      angle += spacing;
+    }
+    ctx.restore();
+  }
+
+  // Curved text helper — bottom arc (flipped)
+  function arcTextBottom(text, radius, centerAngle, color, fontStr, spacing) {
+    ctx.save(); ctx.font = fontStr; ctx.fillStyle = color;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    var total = spacing * (text.length - 1);
+    var angle = centerAngle - total / 2;
+    for (var j = 0; j < text.length; j++) {
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle + Math.PI);
+      ctx.fillText(text[j], 0, -radius); ctx.restore();
+      angle += spacing;
+    }
+    ctx.restore();
+  }
+
+  arcText('SPIRITUAL CARE DIGITAL READINESS', 250, -Math.PI/2, '#b08b4f', 'bold 15px Georgia', 0.108);
+  arcTextBottom('SERBANCARE CONSULTING AND COACHING', 250, Math.PI/2, 'rgba(176,139,79,0.7)', '12px Georgia', 0.096);
+
+  // 6-point star
+  function drawStar(x, y, pts, outerR, innerR, color) {
+    ctx.beginPath();
+    for (var k = 0; k < pts * 2; k++) {
+      var r2 = k % 2 === 0 ? outerR : innerR;
+      var a2 = (k / (pts*2)) * Math.PI*2 - Math.PI/2;
+      k === 0 ? ctx.moveTo(x + r2*Math.cos(a2), y + r2*Math.sin(a2))
+              : ctx.lineTo(x + r2*Math.cos(a2), y + r2*Math.sin(a2));
+    }
+    ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+  }
+  drawStar(cx, cy - 100, 6, 26, 11, '#b08b4f');
+
+  // "PIONEER"
+  ctx.font = 'bold 56px Georgia'; ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('PIONEER', cx, cy - 18);
+
+  // Decorative line with diamond
+  var ly = cy - 2;
+  ctx.strokeStyle = '#b08b4f'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(cx - 95, ly); ctx.lineTo(cx - 18, ly); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx + 18, ly); ctx.lineTo(cx + 95, ly); ctx.stroke();
+  ctx.save(); ctx.translate(cx, ly); ctx.rotate(Math.PI/4);
+  ctx.fillStyle = '#b08b4f'; ctx.fillRect(-5, -5, 10, 10); ctx.restore();
+
+  // "SPIRITUAL CARE"
+  ctx.font = '13px Georgia'; ctx.fillStyle = 'rgba(176,139,79,0.75)';
+  ctx.textBaseline = 'alphabetic'; ctx.fillText('SPIRITUAL CARE', cx, cy + 22);
+
+  // Dot row
+  ctx.fillStyle = 'rgba(176,139,79,0.45)';
+  [-24,-12,0,12,24].forEach(function(xo){
+    ctx.beginPath(); ctx.arc(cx+xo, cy+34, 1.5, 0, Math.PI*2); ctx.fill();
+  });
+
+  // "LEADERSHIP DIGITAL READINESS"
+  ctx.font = '11px Georgia'; ctx.fillStyle = 'rgba(176,139,79,0.55)';
+  ctx.fillText('LEADERSHIP DIGITAL READINESS', cx, cy + 52);
+
+  // "EXCEPTIONAL"
+  ctx.font = 'bold 24px Georgia'; ctx.fillStyle = '#b08b4f';
+  ctx.fillText('EXCEPTIONAL', cx, cy + 82);
+
+  // Year
+  ctx.font = '11px Georgia'; ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillText(new Date().getFullYear(), cx, cy + 118);
+
+  // Download as PNG
+  canvas.toBlob(function(blob){
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url; link.download = 'SerbanCare_Spiritual_Care_Digital_Readiness_Pioneer.png';
+    link.click(); URL.revokeObjectURL(url);
+  });
 }
 
 function restart() {
