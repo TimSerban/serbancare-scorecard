@@ -405,6 +405,11 @@
         <p id="next-text"></p>
       </div>
 
+      <div class="next-box" style="background:#f7f4ed; border-left-color: var(--gold); margin-bottom:26px;">
+        <h3 style="color:var(--gold);">✦ Leadership Digital Readiness: Exceptional</h3>
+        <p style="font-size:0.98rem; color:var(--ink-soft); margin-top:8px;">By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of <strong>Exceptional</strong>. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!</p>
+      </div>
+
       <div id="optin-block" class="optin">
         <div class="optin-eyebrow">Optional</div>
         <h3 class="optin-h">Want your Preliminary Readiness Report with tailored recommendations?</h3>
@@ -729,6 +734,11 @@ function generateReportPDF(name, org) {
     // The deliberate stop — diagnose, don't prescribe
     wrap("WHY THIS IS THE STARTING POINT, NOT THE ANSWER", 10, "bold", accent, 16);
     wrap("This snapshot is a screen. In spiritual care, a screen identifies who needs care; it does not deliver the care. Naming these gaps is the diagnosis. Closing them is structured, expert work, sequencing the right interventions, protecting the human heart of care, and building what survives a budget cycle and a crisis. That work is what SerbanCare does, and it is specific to your organization in ways a document cannot be.", 11.5, "normal", soft, 17);
+    y += 12; rule();
+
+    // Leadership Digital Readiness
+    wrap("LEADERSHIP DIGITAL READINESS: EXCEPTIONAL", 10, "bold", [176,139,79], 16);
+    wrap("By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of Exceptional. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!", 11.5, "normal", soft, 17);
     y += 12; rule();
 
     // Close to Tim
