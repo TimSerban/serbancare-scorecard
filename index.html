@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SerbanCare Readiness Scorecard</title>
+<title>SerbanCare Consulting and Coaching — Readiness Scorecard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -355,7 +355,7 @@
       <p style="margin-bottom:26px;color:var(--ink-soft);">This Scorecard measures both the <strong>Spiritual Care Maturity</strong> curve, aligned to CHA acute care department levels, and your <strong>Disaster Spiritual Care Readiness</strong>, drawn from over three decades of field leadership including response to 9/11, the Boston Marathon bombing, Katrina, Texas Hill Country flash floods, and the Los Angeles urban firestorms of 2025. Your results appear immediately, no email required.</p>
       <button class="cta-btn" onclick="start()">Begin the Scorecard</button>
     </div>
-    <p class="footer">Built by Tim Serban, M.A., B.C.C. — Board Certified Clinical Chaplain Executive Leader.<br>SerbanCare.com</p>
+    <p class="footer">SerbanCare Consulting and Coaching<br>Built by Tim Serban, M.A., B.C.C. — Board Certified Clinical Chaplain Executive Leader.<br>SerbanCare.com</p>
   </section>
 
   <!-- QUIZ -->
@@ -405,8 +405,8 @@
 
       <div id="optin-block" class="optin">
         <div class="optin-eyebrow">Optional</div>
-        <h3 class="optin-h">Want the full written report and tailored recommendations?</h3>
-        <p class="optin-p">Your snapshot is above and yours to keep. For the full one-page diagnostic, your placement, the evidence behind it, and the priority areas your answers surfaced, leave your details and it downloads instantly.</p>
+        <h3 class="optin-h">Want your Preliminary Readiness Report with tailored recommendations?</h3>
+        <p class="optin-p">Your snapshot is above and yours to keep. For the full one-page Preliminary Readiness Report — your placement, the evidence behind it, and the priority areas your answers surfaced — leave your details and it downloads instantly.</p>
         <div class="field">
           <label for="g-name">Name</label>
           <input type="text" id="g-name" placeholder="Your name" autocomplete="name">
@@ -420,19 +420,19 @@
           <input type="email" id="g-email" placeholder="you@organization.org" autocomplete="email">
         </div>
         <div class="err-msg" id="gate-err">Please enter your name and a valid work email so we can send your report.</div>
-        <button class="cta-btn" onclick="submitOptin()">Send Me the Full Report</button>
+        <button class="cta-btn" onclick="submitOptin()">Send Me My Preliminary Readiness Report</button>
         <p class="privacy">Used only to send your report and follow up about your readiness. No spam, no list-selling, ever.</p>
       </div>
 
       <div id="optin-thanks" class="optin-thanks hidden">
-        <h3 class="optin-h">Your report has downloaded. ✦</h3>
-        <p class="optin-p">Check your downloads for your one-page diagnostic. If it did not open automatically, Tim will follow up with it personally. When you are ready, the consultation below turns this snapshot into a prioritized path.</p>
+        <h3 class="optin-h">Your Preliminary Readiness Report has downloaded. ✦</h3>
+        <p class="optin-p">Check your downloads for your Preliminary Readiness Report. If it did not open automatically, Tim will follow up with it personally. When you are ready, the consultation below turns this snapshot into a prioritized path.</p>
       </div>
 
       <a class="consult-btn" id="consult-link" onclick="return guardConsult(this)">Schedule a Strategy Consultation</a>
       <button class="restart" onclick="restart()">Retake the Scorecard</button>
     </div>
-    <p class="footer">This snapshot is a structured self-assessment, not a formal audit.<br>A consultation translates it into a path specific to your organization.</p>
+    <p class="footer">SerbanCare Consulting and Coaching<br>This snapshot is a structured self-assessment, not a formal audit.<br>A consultation translates it into a path specific to your organization.</p>
   </section>
 
 </div>
@@ -668,7 +668,7 @@ function generateReportPDF(name, org) {
     doc.text("SerbanCare Consulting and Coaching", x, y); y += 26;
 
     wrap("Spiritual Care & Disaster Readiness", 22, "bold", ink, 26);
-    wrap("A One-Page Diagnostic Snapshot", 13, "italic", soft, 20);
+    wrap("Preliminary Readiness Report", 13, "italic", soft, 20);
     y += 6; rule();
 
     // Prepared for
@@ -727,7 +727,7 @@ function generateReportPDF(name, org) {
     doc.text("This is a structured self-assessment snapshot, not a formal audit. © SerbanCare Consulting and Coaching.", x, 762);
 
     var safeName = (org || name || "SerbanCare").replace(/[^a-z0-9]/gi,"_").slice(0,40);
-    doc.save("SerbanCare_Readiness_Snapshot_" + safeName + ".pdf");
+    doc.save("SerbanCare_Preliminary_Readiness_Report_" + safeName + ".pdf");
     return true;
   } catch (e) {
     console.error("PDF generation failed:", e);
@@ -791,14 +791,14 @@ function disRating() {
 
 function disRatingLabel() {
   var r = disRating();
-  if (r <= 1) return "Level 1 — High Vulnerability";
+  if (r <= 1) return "Level 1 — Foundational Readiness Needed";
   if (r === 2) return "Level 2 — Emerging Readiness";
   return "Level 3 — Optimal Readiness";
 }
 
 function disRatingSubtitle() {
   var r = disRating();
-  if (r <= 1) return "High Vulnerability · Immediate action required";
+  if (r <= 1) return "Foundational Readiness Needed · Immediate action required";
   if (r === 2) return "Emerging Readiness · Structured development needed";
   return "Optimal Readiness · Model for the field";
 }
@@ -813,7 +813,7 @@ function disLevelNum() {
 /* Engagement modifier: what the disaster rating says to lead with */
 function disEngagementNote() {
   var n = disLevelNum();
-  if (n === 1) return "Disaster posture is Level 1 — High Vulnerability. No formal plan, undefined staff roles, reactive-only. Lead with foundational DSC planning and command-structure integration as a first-phase deliverable alongside any maturity work.";
+  if (n === 1) return "Disaster posture is Level 1 — Foundational Readiness Needed. No formal plan, undefined staff roles, reactive-only. Lead with foundational DSC planning and command-structure integration as a first-phase deliverable alongside any maturity work.";
   if (n === 2) return "Disaster posture is Level 2 — Emerging Readiness. Framework emerging but not consistently practiced. Complement the maturity engagement with a DSC proving phase: move from plan-on-paper to exercised readiness.";
   return "Disaster posture is Level 3 — Optimal Readiness. Fully integrated with active training cycles and community partnerships. The engagement anchors on the maturity work; disaster may only need a maintenance and succession advisory.";
 }
