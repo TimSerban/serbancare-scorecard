@@ -647,6 +647,7 @@ function submitOptin() {
 
   // Notify Tim automatically
   emailjs.send("service_p614e06", "template_i31i8ff", {
+    to_email: "Tim.Serban@SerbanCare.com",
     subject: "New Preliminary Readiness Report — " + name + (org ? " (" + org + ")" : ""),
     body:
       "A client has just downloaded their Preliminary Readiness Report.\n\n" +
@@ -658,6 +659,10 @@ function submitOptin() {
       "  Spiritual Care Maturity:  " + matLevel() + " (" + matScore() + "/15)\n" +
       "  Disaster Readiness:       " + disRatingLabel() + "\n\n" +
       "Captured: " + new Date().toLocaleString()
+  }).then(function() {
+    console.log("EmailJS: notification sent successfully");
+  }, function(error) {
+    console.error("EmailJS error:", JSON.stringify(error));
   });
 
   document.getElementById('optin-block').classList.add('hidden');
