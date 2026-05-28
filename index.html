@@ -420,8 +420,9 @@
       </div>
 
       <div class="next-box" style="background:#f7f4ed; border-left-color: var(--gold); margin-bottom:26px;">
-        <h3 style="color:var(--gold);">✦ Leadership Digital Readiness: Exceptional</h3>
-        <p style="font-size:0.98rem; color:var(--ink-soft); margin-top:8px; margin-bottom:18px;">By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of <strong>Exceptional</strong>. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!</p>
+        <h3 style="color:var(--gold);">✦ <strong>Leadership Digital Readiness: Exceptional</strong></h3>
+        <p style="font-size:0.98rem; color:var(--ink-soft); margin-top:10px; margin-bottom:10px;">By completing this Scorecard you have demonstrated an <strong>Exceptional level of Leadership Digital Readiness</strong>. You have strong skill, vision, and confidence in helping move <strong>Spiritual Care and Chaplaincy</strong> forward through thoughtful and responsible digital innovation.</p>
+        <p style="font-size:0.98rem; color:var(--ink); font-weight:600; margin-bottom:18px;"><strong>Congratulations! You are recognized as a Spiritual Care Digital Pioneer and have earned this award!</strong></p>
         <div style="text-align:center; margin-bottom:16px;">
           <img src="badge.jpg" alt="Spiritual Care Digital Pioneer Badge" style="width:280px; height:280px; border-radius:50%; object-fit:cover;">
         </div>
@@ -758,7 +759,9 @@ function generateReportPDF(name, org) {
 
     // Leadership Digital Readiness
     wrap("LEADERSHIP DIGITAL READINESS: EXCEPTIONAL", 10, "bold", [176,139,79], 16);
-    wrap("By completing this Scorecard, you have demonstrated a Leadership Digital Readiness of Exceptional. You are an early adopter who demonstrates a high level of skill in advancing the field of Spiritual Care and Chaplaincy forward in a monumental way. Congratulations!", 11.5, "normal", soft, 17);
+    wrap("By completing this Scorecard you have demonstrated an Exceptional level of Leadership Digital Readiness. You have strong skill, vision, and confidence in helping move Spiritual Care and Chaplaincy forward through thoughtful and responsible digital innovation.", 11.5, "normal", soft, 17);
+    y += 6;
+    wrap("Congratulations! You are recognized as a Spiritual Care Digital Pioneer and have earned this award!", 11.5, "bold", ink, 17);
     y += 12; rule();
 
     // Close to Tim
