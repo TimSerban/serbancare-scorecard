@@ -668,9 +668,33 @@ function submitOptin() {
       "  Disaster Readiness:       " + disRatingLabel() + "\n\n" +
       "Captured: " + new Date().toLocaleString()
   }).then(function() {
-    console.log("EmailJS: notification sent successfully");
+    console.log("EmailJS: Tim notification sent successfully");
   }, function(error) {
     console.error("EmailJS error:", JSON.stringify(error));
+  });
+
+  // Send client their results confirmation
+  emailjs.send("service_p614e06", "template_bmb01o5", {
+    to_email: email,
+    subject: "Your SerbanCare Readiness Scorecard Results",
+    body:
+      "Dear " + name + ",\n\n" +
+      "Thank you for completing the SerbanCare Spiritual Care & Disaster Readiness Scorecard. " +
+      "Your Preliminary Readiness Report has been saved to your Downloads folder.\n\n" +
+      "YOUR RESULTS\n" +
+      "  Spiritual Care Maturity:  " + matLevel() + " (" + matScore() + "/15)\n" +
+      "  Disaster Readiness:       " + disRatingLabel() + "\n\n" +
+      "If you have any questions about your results or would like to schedule a strategy consultation, " +
+      "please reach out directly:\n\n" +
+      "  Tim Serban, M.A., B.C.C.\n" +
+      "  Tim.Serban@SerbanCare.com\n" +
+      "  SerbanCare.com\n\n" +
+      "We look forward to supporting your work.\n\n" +
+      "SerbanCare Consulting and Coaching"
+  }).then(function() {
+    console.log("EmailJS: client confirmation sent successfully");
+  }, function(error) {
+    console.error("EmailJS client email error:", JSON.stringify(error));
   });
 
   document.getElementById('optin-block').classList.add('hidden');
